@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Obelisk</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <style>
+        body {
+            background-color: #000;
+            color: #d5d5d5;
+        }
+        iframe {
+            background-color: #fff;
+        }
+        h1 {
+            text-align: right;
+        }
+        #obelisk-form {
+            position: absolute;
+            left: 0;
+            right: 0;
+            margin-left: auto;
+            margin-right: auto;
+            width: 200px; /* Need a specific value to work */
+            bottom: 10%;
+        }
+        #obelisk-answer {
+            opacity: 1;
+            transition: opacity 1s;
+            position: absolute;
+            left: 0;
+            right: 0;
+            margin-left: auto;
+            margin-right: auto;
+            width: 200px; /* Need a specific value to work */
+            top: 30%;
+            text-align: center;
+        }
+        #obelisk-answer.hidden {
+            opacity: 0;
+        }
+        img {
+            opacity: 0.2;
+            box-shadow: inset 0 0 100px #000;
+        }
+    </style>
+    <script>
+        {% include 'obelisk.js' %}
+    </script>
+</head>
+<body>
+    <h1>The Obelisk</h1>
+    <img src="favicon.svg" width="100%" height="100%"></image>
+    <div id="obelisk-answer"></div>
+    <form action="/ask" method="POST" id="obelisk-form">
+        <input type="textarea" name="question" id="question" placeholder="O Obelisk, ...">
+    </form>
+</body>
+</html>
