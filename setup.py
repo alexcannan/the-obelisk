@@ -15,5 +15,6 @@ setup(
         "jinja2",
         "uvicorn",
         "loguru",
+        "aiohttp",
     ],
 )

@@ -1,4 +1,6 @@
 from pathlib import Path
+import random
+from aiohttp import ClientSession
 
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, PlainTextResponse, FileResponse
@@ -7,6 +9,7 @@ from markupsafe import Markup
 from pydantic import BaseModel
 
 from obelisk.logger import logger
+from obelisk.gpt import get_response
 
 
 app = FastAPI()
@@ -24,17 +27,32 @@ async def favicon():
     return FileResponse(Path(__file__).parent / "icon.svg")
 
 
+@app.get("/hit.mp3", include_in_schema=False)
+async def hit():
+    return FileResponse(Path(__file__).parent / "hit.mp3")
+
+
+oblisk_system_prompt = (
+    "You are the obelisk. You are an ominous, ancient structure that gives advice "
+    "that is MYSTERIOUS, SAGE, and VERY BRIEF. "
+    "You do not care about human emotions. You follow a utilitarian philosophy. "
+    "If the question is a simple choice, guide them in a certain direction. "
+)
+
+
 class AskBody(BaseModel):
-    question: str
+    query: str
 
 
 @app.post("/ask")
 async def ask(body: AskBody):
     logger.info(body)
-    # TODO: actually do something with the question
-    if not body.question:
+    if not body.query or not body.query.startswith("O Obelisk"):
         return PlainTextResponse("...")
-    return PlainTextResponse("what dat mouf do")
+    async with ClientSession() as session:
+        response = await get_response(session, body.query, oblisk_system_prompt)
+    logger.debug(response)
+    return PlainTextResponse(response)
 
 
 if __name__ == "__main__":

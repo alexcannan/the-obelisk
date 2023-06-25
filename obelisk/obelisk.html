@@ -8,6 +8,7 @@
         body {
             background-color: #000;
             color: #d5d5d5;
+            font-family: 'Century Gothic', 'CenturyGothic', 'AppleGothic',;
         }
         iframe {
             background-color: #fff;
@@ -21,12 +22,15 @@
             right: 0;
             margin-left: auto;
             margin-right: auto;
-            width: 200px; /* Need a specific value to work */
+            width: 100%; /* Need a specific value to work */
+            text-align: center;
             bottom: 10%;
         }
         #obelisk-answer {
-            opacity: 1;
-            transition: opacity 1s;
+            transition: opacity 3s, transform 6s;
+            opacity: 0;
+            transform: scale(0.8);
+            transform-origin: center;
             position: absolute;
             left: 0;
             right: 0;
@@ -36,8 +40,21 @@
             top: 30%;
             text-align: center;
         }
-        #obelisk-answer.hidden {
-            opacity: 0;
+        input {
+            border: 1px solid #ccc;
+            font-family: inherit;
+            font-size: inherit;
+            padding: 1px 6px;
+            text-align: center;
+            display: block;
+            width: 100%;
+            overflow: hidden;
+            resize: both;
+            min-height: 40px;
+            line-height: 20px;
+        }
+        #obelisk-audio {
+            display: none;
         }
         img {
             opacity: 0.2;
@@ -50,10 +67,11 @@
 </head>
 <body>
     <h1>The Obelisk</h1>
+    <audio id="obelisk-audio" src="/hit.mp3"></audio>
     <img src="favicon.svg" width="100%" height="100%"></image>
     <div id="obelisk-answer"></div>
     <form action="/ask" method="POST" id="obelisk-form">
-        <input type="textarea" name="question" id="question" placeholder="O Obelisk, ...">
+        <input type="textarea" name="query" id="query" placeholder="O Obelisk, ...">
     </form>
 </body>
 </html>
