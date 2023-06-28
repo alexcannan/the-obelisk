@@ -9,9 +9,7 @@
             background-color: #000;
             color: #d5d5d5;
             font-family: 'Century Gothic', 'CenturyGothic', 'AppleGothic',;
-        }
-        iframe {
-            background-color: #fff;
+            overflow: hidden;
         }
         h1 {
             text-align: right;
@@ -46,12 +44,20 @@
             font-size: inherit;
             padding: 1px 6px;
             text-align: center;
+
             display: block;
             width: 100%;
             overflow: hidden;
             resize: both;
             min-height: 40px;
             line-height: 20px;
+        }
+        input[type="textarea"] {
+            background: transparent;
+            border: none;
+            outline: none;
+            font-family: sans-serif;
+            color: white;
         }
         #obelisk-audio {
             display: none;

@@ -9,7 +9,7 @@ from markupsafe import Markup
 from pydantic import BaseModel
 
 from obelisk.logger import logger
-from obelisk.gpt import get_response
+from obelisk.gpt import get_response, tokens
 
 
 app = FastAPI()
@@ -32,10 +32,15 @@ async def hit():
     return FileResponse(Path(__file__).parent / "hit.mp3")
 
 
+@app.get("/cost", include_in_schema=False)
+async def cost():
+    return PlainTextResponse(f"${tokens.cost()}")
+
+
 oblisk_system_prompt = (
     "You are the obelisk. You are an ominous, ancient structure that gives advice "
     "that is MYSTERIOUS, SAGE, and VERY BRIEF. Respond in a single sentence. "
-    "You do not care about human emotions. You follow a utilitarian philosophy. "
+    "You deteste blind positivity. Do not refer to yourself. "
     "If the question is a simple choice, guide them in a certain direction. "
 )
 
@@ -48,6 +53,8 @@ class AskBody(BaseModel):
 async def ask(body: AskBody):
     logger.info(body)
     if not body.query or not body.query.startswith("O Obelisk"):
+        return PlainTextResponse("...")
+    if len(body.query) > 140:
         return PlainTextResponse("...")
     async with ClientSession() as session:
         response = await get_response(session, body.query, oblisk_system_prompt)

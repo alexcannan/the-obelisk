@@ -1,11 +1,6 @@
-FROM ubuntu:20.04
+FROM python:3.10-alpine
 
 WORKDIR /app
-
-RUN apt-get update \
-    && apt-get -y install \
-    python3 python3-pip \
-    && apt-get clean
 
 RUN python3 -m pip install --upgrade pip setuptools wheel
 
@@ -15,4 +10,4 @@ COPY obelisk/ obelisk/
 
 RUN python3 -m pip install .
 
-CMD gunicorn -k uvicorn.workers.UvicornWorker -c gunicorn_conf.py lissamp.web.router:app
+CMD gunicorn -k uvicorn.workers.UvicornWorker -c gunicorn_conf.py obelisk.app:app

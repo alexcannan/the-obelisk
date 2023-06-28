@@ -16,5 +16,7 @@ setup(
         "uvicorn",
         "loguru",
         "aiohttp",
+        "gunicorn",
+        "python-dateutil",
     ],
 )
