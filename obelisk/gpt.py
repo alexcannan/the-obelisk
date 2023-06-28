@@ -3,6 +3,7 @@ uses ChatGPT API to generate a response to a prompt
 """
 
 import os
+import sys
 from typing import Optional
 
 from aiohttp import ClientSession
@@ -11,11 +12,8 @@ from obelisk.logger import logger
 
 API_KEY = os.environ.get('OPENAI_API_KEY')
 if not API_KEY or not API_KEY.startswith('sk-'):
-    logger.warning("OPENAI_API_KEY not set or incorrect, some functionality is disabled")
-
-
-class MissingOpenAIKeyError(Exception):
-    pass
+    logger.error("OPENAI_API_KEY not set or incorrect, exiting...")
+    sys.exit(1)
 
 
 async def get_response(session: ClientSession,
