@@ -9,7 +9,8 @@ import sys
 from typing import Optional
 
 from aiohttp import ClientSession
-from dateutil.parser import parse
+from astral.sun import sun
+from astral import LocationInfo
 
 from obelisk.logger import logger
 
@@ -39,36 +40,35 @@ class TokensUsed():
         self.prompt += usage['prompt_tokens']
         self.completion += usage['completion_tokens']
 
-    async def set_next_reset_(self):
-        # fill next_reset_dt if it's not already filled
-        if not self.next_reset_dt:
-            async with ClientSession() as session:
-                while not self.next_reset_dt or self.next_reset_dt < datetime.utcnow():
-                    dtdiff = 0
-                    params = {"lat": -39.178844,
-                                "lng": 179.826183,
-                                "date": (datetime.utcnow()+timedelta(days=dtdiff)).strftime('%Y-%m-%d'),
-                                "formatted": 0}
-                    async with session.get("https://api.sunrise-sunset.org/json",
-                                           params=params) as resp:
-                        data = await resp.json()
-                    self.next_reset_dt = parse(data['results']['sunset']).replace(tzinfo=None)
-                    dtdiff += 1
-            logger.debug(f"next reset at {self.next_reset_dt}")
-
-    async def _maybe_reset(self):
-        # reset values every time the sun sets at the stonehenge antipode
-        # https://api.sunrise-sunset.org/json?lat=36.7201600&lng=-4.4203400&date=2023-06-10
-        # but use -39.178844, 179.826183
-        await self.set_next_reset_()
-        if self.next_reset_dt < datetime.utcnow():
-            logger.info("the obelisk has reset")
-            self.reset()
-            self.next_reset_dt = None
-
     def reset(self):
         self.prompt = 0
         self.completion = 0
+
+    async def _maybe_reset(self):
+        if self.next_reset_dt is None or datetime.utcnow() > self.next_reset_dt:
+            if self.next_reset_dt is not None:
+                logger.debug('the sun has set again...')
+            self.reset()
+            # Calculate the next reset time based on the current time
+            self.next_reset_dt = self.get_next_reset_time()
+
+    def get_next_reset_time(self) -> datetime:
+        # 51.178852, -1.826176
+        location = LocationInfo(
+            latitude=-51.178889,  # Latitude of stonehenge antipode
+            longitude=179.826176,  # Longitude of stonehenge antipode
+        )
+
+        # Get today's sunset time at stonehenge antipode
+        s = sun(location.observer, date=datetime.utcnow())
+        sunset = s["sunset"].replace(tzinfo=None)
+        if sunset < datetime.utcnow():
+            # if sunset is before now, then it's already set and we need to
+            # set it to tomorrow
+            s = sun(location.observer, date=datetime.utcnow() + timedelta(days=1))
+            sunset = s["sunset"].replace(tzinfo=None)
+
+        return sunset
 
     def cost(self) -> float:
         """ returns total spent on requests in dollars """

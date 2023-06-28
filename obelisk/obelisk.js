@@ -49,4 +49,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
             }
         }
     }
+
+    obeliskInput = document.getElementById('query');
+    obeliskInput.focus();
+
 });

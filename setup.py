@@ -18,5 +18,6 @@ setup(
         "aiohttp",
         "gunicorn",
         "python-dateutil",
+        "astral",
     ],
 )
