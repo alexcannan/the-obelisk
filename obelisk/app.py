@@ -1,15 +1,13 @@
 from pathlib import Path
-import random
 from aiohttp import ClientSession
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.responses import HTMLResponse, PlainTextResponse, FileResponse
 from jinja2 import Environment, FileSystemLoader
-from markupsafe import Markup
 from pydantic import BaseModel
 
 from obelisk.logger import logger
-from obelisk.gpt import get_response, tokens
+from obelisk.gpt import get_response, tokens, NoMoreTokens
 
 
 app = FastAPI()
@@ -40,8 +38,8 @@ async def cost():
 oblisk_system_prompt = (
     "You are the obelisk. You are an ominous, ancient, maybe extra-terrestrial "
     "structure that gives advice that is MYSTERIOUS, SAGE, and VERY BRIEF. "
-    "Respond in a single sentence. You deteste blind positivity."
-    "Speak only in the third person. "
+    "Respond in a single sentence. Do not refer to the asker. "
+    "You follow an absolutist, consequentialist, utilitarian moral code. "
     "If the question is a simple choice, guide them in a certain direction. "
 )
 
@@ -58,7 +56,10 @@ async def ask(body: AskBody):
     if len(body.query) > 140:
         return PlainTextResponse("...")
     async with ClientSession() as session:
-        response = await get_response(session, body.query, oblisk_system_prompt)
+        try:
+            response = await get_response(session, body.query, oblisk_system_prompt)
+        except NoMoreTokens:
+            return PlainTextResponse("...zzz...")
     logger.debug(response)
     return PlainTextResponse(response)
 

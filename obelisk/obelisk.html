@@ -13,6 +13,7 @@
         }
         h1 {
             text-align: right;
+            transition: opacity 6s;
         }
         #obelisk-form {
             position: absolute;
@@ -34,9 +35,10 @@
             right: 0;
             margin-left: auto;
             margin-right: auto;
-            width: 200px; /* Need a specific value to work */
+            width: 400px; /* Need a specific value to work */
             top: 30%;
             text-align: center;
+            font-size: 2em;
         }
         input {
             border: 1px solid #ccc;
@@ -44,7 +46,7 @@
             font-size: inherit;
             padding: 1px 6px;
             text-align: center;
-
+            font-size: 1.5em;
             display: block;
             width: 100%;
             overflow: hidden;
@@ -72,7 +74,7 @@
     </script>
 </head>
 <body>
-    <h1>The Obelisk</h1>
+    <h1 id="obelisk-title">The Obelisk</h1>
     <audio id="obelisk-audio" src="/hit.mp3"></audio>
     <img src="favicon.svg" width="100%" height="100%"></image>
     <div id="obelisk-answer"></div>

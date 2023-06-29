@@ -53,4 +53,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
     obeliskInput = document.getElementById('query');
     obeliskInput.focus();
 
+    obeliskTitle = document.getElementById('obelisk-title');
+    setTimeout(() => {
+        obeliskTitle.style.opacity = 0;
+    }, 10000);
 });
