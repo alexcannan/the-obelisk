@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>The Obelisk</title>
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <style>
@@ -53,6 +54,14 @@
             resize: both;
             min-height: 40px;
             line-height: 20px;
+        }
+        @media only screen and (max-width: 600px) {
+            #obelisk-answer {
+                width: 100%;
+            }
+            input {
+                font-size: 2em;
+            }
         }
         input[type="textarea"] {
             background: transparent;
