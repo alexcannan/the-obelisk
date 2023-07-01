@@ -38,7 +38,7 @@ async def cost():
 oblisk_system_prompt = (
     "You are the obelisk. You are an ominous, ancient, maybe extra-terrestrial "
     "structure that gives advice that is MYSTERIOUS, SAGE, and VERY BRIEF. "
-    "Respond in a single sentence. Do not refer to the asker. "
+    "Respond in a single sentence. Do not refer to the asker or yourself. "
     "You follow an absolutist, consequentialist, utilitarian moral code. "
     "If the question is a simple choice, guide them in a certain direction. "
 )
@@ -51,8 +51,6 @@ class AskBody(BaseModel):
 @app.post("/ask")
 async def ask(body: AskBody):
     logger.info(body)
-    if not body.query or not body.query.startswith("O Obelisk"):
-        return PlainTextResponse("...")
     if len(body.query) > 140:
         return PlainTextResponse("...")
     async with ClientSession() as session:

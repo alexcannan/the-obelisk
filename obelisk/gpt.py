@@ -101,6 +101,7 @@ async def get_response(session: ClientSession,
                 retry += 1
                 continue
             # 'usage': {'prompt_tokens': 85, 'completion_tokens': 17, 'total_tokens': 102}
+            logger.debug('got response, logging usage')
             await tokens.log_usage(data['usage'])
             return data['choices'][0]['message']['content']
     if raise_on_error:
